@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>泊車收費計算器</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f172a;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --border:#1f2937;
+      --blue:#3b82f6;
+      --green:#22c55e;
+      --yellow:#fde047;
+      --red:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-text-size-adjust:100%;
+    }
+    .app{
+      min-height:100%;
+      display:flex;
+      flex-direction:column;
+      padding-bottom:72px; /* space for bottom nav */
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background:linear-gradient(180deg,#0c1426,#0b1220);
+      border-bottom:1px solid var(--border);
+      padding:12px env(safe-area-inset-right) 12px env(safe-area-inset-left);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .title{font-size:18px; font-weight:800; color:#93c5fd; letter-spacing:0.5px}
+    .clock{font-variant-numeric:tabular-nums; font-size:14px; color:#bfdbfe; background:#0b1a33;
+           border:1px solid var(--border); border-radius:10px; padding:6px 10px; white-space:nowrap}
+    main{flex:1; padding:12px; max-width:860px; width:100%; margin:0 auto}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:0 8px 24px rgba(0,0,0,.35);}
+    .section-title{font-size:16px; color:#a7f3d0; margin:4px 0 10px 2px}
+    label{display:block; font-size:16px; margin:8px 0 6px; color:#c7d2fe}
+    input[type="time"],input[type="number"]{
+      width:100%; font-size:20px; padding:14px 16px;
+      border-radius:12px; border:2px solid var(--border); background:#0b1220; color:var(--text); outline:none;
+    }
+    input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+    .row .col{flex:1 1 260px}
+    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
+    .btn{flex:1 1 160px; font-size:18px; font-weight:900; padding:14px; border:none; border-radius:12px; cursor:pointer}
+    .btn.blue{background:var(--blue); color:#051225; box-shadow:0 8px 18px rgba(59,130,246,.25)}
+    .btn.green{background:var(--green); color:#05180f; box-shadow:0 8px 18px rgba(34,197,94,.25)}
+    .btn.ghost{background:#0b1220; color:#e5e7eb; border:2px solid var(--border)}
+    .btn.red{background:var(--red); color:#140a0a}
+    .result{margin-top:10px; background:#0b1220; border:2px dashed var(--border); border-radius:12px; padding:14px; font-size:18px; line-height:1.5}
+    .money{font-size:34px; font-weight:900; color:var(--yellow)}
+    .muted{color:var(--muted); font-size:14px}
+    /* bottom nav */
+    .tabbar{
+      position:fixed; bottom:0; left:0; right:0; z-index:10;
+      padding:8px env(safe-area-inset-right) calc(8px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+      background:linear-gradient(0deg,#0c1426,#0b1220);
+      border-top:1px solid var(--border);
+      display:flex; gap:10px; justify-content:space-around;
+    }
+    .tabbtn{
+      flex:1; text-align:center; font-size:14px; padding:10px 8px; color:#cbd5e1;
+      border-radius:12px; border:1px solid var(--border); background:#0b1220;
+      user-select:none;
+    }
+    .tabbtn.active{background:#0b1a33; color:#e2e8f0; border-color:#21406b}
+    .page{display:none}
+    .page.active{display:block}
+    table{width:100%; border-collapse:collapse}
+    th,td{padding:10px; border-bottom:1px solid var(--border); font-size:14px}
+    th{color:#93c5fd; text-align:left}
+    td{color:#e5e7eb}
+    .right{text-align:right}
+    .chip{display:inline-block; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:#0b1220; color:#e2e8f0; font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">🚗 泊車收費計算器</div>
+      <div class="clock" id="clock">--/--/---- --:--:--</div>
+    </header>
+
+    <main>
+      <!-- Home -->
+      <section id="page-home" class="page active">
+        <div class="card">
+          <p class="section-title">主頁</p>
+          <div class="row">
+            <div class="col">
+              <label for="start">入車時間</label>
+              <input id="start" type="time" step="60">
+            </div>
+            <div class="col">
+              <label for="end">出閘時間</label>
+              <input id="end" type="time" step="60">
+            </div>
+          </div>
+
+          <div class="btns">
+            <button class="btn green" id="now">出閘＝現在</button>
+            <button class="btn ghost" id="swap">入/出 對調</button>
+            <button class="btn blue" id="calc">計算應收（使用預設）</button>
+            <button class="btn ghost" id="clear">清除</button>
+          </div>
+
+          <div class="result" aria-live="polite">
+            <div class="muted" id="using">使用預設：—</div>
+            <div>總時長：<span id="duration">—</span></div>
+            <div>公式：<span id="formula">—</span></div>
+            <div class="money" id="amount">$0.00</div>
+            <div class="muted" id="stamp">計算時間：—</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section id="page-settings" class="page">
+        <div class="card">
+          <p class="section-title">設定</p>
+          <label>計費單位（只在這裡設定）</label>
+          <div class="row">
+            <div class="col">
+              <button class="btn ghost" id="unit-hour">每小時計</button>
+            </div>
+            <div class="col">
+              <button class="btn ghost" id="unit-half">每半小時計</button>
+            </div>
+          </div>
+
+          <label for="rate">預設收費（$ / 單位）</label>
+          <input id="rate" type="number" min="0" step="0.5" placeholder="例如：12">
+
+          <div class="btns">
+            <button class="btn blue" id="save-def">儲存預設</button>
+            <button class="btn ghost" id="reset-def">清空預設</button>
+          </div>
+
+          <p class="muted">預設將儲存在此裝置（localStorage）。主頁計算會使用這些預設。</p>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section id="page-history" class="page">
+        <div class="card">
+          <p class="section-title">曆史</p>
+          <div class="btns">
+            <button class="btn ghost" id="export">匯出 CSV</button>
+            <button class="btn red" id="clear-his">清除歷史</button>
+          </div>
+          <div style="overflow:auto; margin-top:10px">
+            <table>
+              <thead>
+                <tr>
+                  <th>時間戳</th>
+                  <th>入</th>
+                  <th>出</th>
+                  <th>單位</th>
+                  <th class="right">單價($)</th>
+                  <th class="right">時長</th>
+                  <th class="right">金額($)</th>
+                </tr>
+              </thead>
+              <tbody id="hisbody">
+                <tr><td colspan="7" class="muted">暫無紀錄</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- bottom tab bar -->
+    <nav class="tabbar" role="tablist" aria-label="Navigation">
+      <div class="tabbtn active" data-tab="home">主頁</div>
+      <div class="tabbtn" data-tab="settings">設定</div>
+      <div class="tabbtn" data-tab="history">曆史</div>
+    </nav>
+  </div>
+
+  <script>
+    // ===== 工具 =====
+    function pad(n){return String(n).padStart(2,'0');}
+    function nowParts(){
+      const d=new Date();
+      return {d, dd:pad(d.getDate()), mm:pad(d.getMonth()+1), yyyy:d.getFullYear(),
+              hh:pad(d.getHours()), nn:pad(d.getMinutes()), ss:pad(d.getSeconds())};
+    }
+    function nowHM(){const p=nowParts(); return p.hh+':'+p.nn;}
+    function nowStamp(){const p=nowParts(); return p.dd+'/'+p.mm+'/'+p.yyyy+' '+p.hh+':'+p.nn+':'+p.ss;}
+    function toMin(hm){const [h,m]=hm.split(':').map(Number); return h*60+m;}
+    function fromMin(mins){const h=Math.floor(mins/60),m=mins%60; return h+'小時'+m+'分鐘';}
+    function saveLS(k,v){localStorage.setItem(k,JSON.stringify(v));}
+    function loadLS(k,def){try{const v=JSON.parse(localStorage.getItem(k)); return v??def}catch(_){return def}}
+
+    // ===== Header Clock =====
+    const clockEl = document.getElementById('clock');
+    function tickClock(){ clockEl.textContent = nowStamp(); }
+    setInterval(tickClock, 1000); tickClock();
+
+    // ===== Tabs =====
+    const tabs = document.querySelectorAll('.tabbtn');
+    const pages = {
+      home: document.getElementById('page-home'),
+      settings: document.getElementById('page-settings'),
+      history: document.getElementById('page-history'),
+    };
+    tabs.forEach(t=> t.addEventListener('click', ()=>{
+      tabs.forEach(x=> x.classList.remove('active'));
+      t.classList.add('active');
+      const name = t.dataset.tab;
+      Object.values(pages).forEach(p=> p.classList.remove('active'));
+      pages[name].classList.add('active');
+      if(name==='history') renderHistory();
+      if(name==='home') syncUsingLabel();
+    }));
+
+    // ===== Defaults (Settings) =====
+    const DEFAULTS = loadLS('parking_defaults', {unit:'hour', rate:12});
+    const unitHourBtn = document.getElementById('unit-hour');
+    const unitHalfBtn = document.getElementById('unit-half');
+    const rateInput = document.getElementById('rate');
+    const saveDefBtn = document.getElementById('save-def');
+    const resetDefBtn = document.getElementById('reset-def');
+
+    function reflectDefaultsUI(){
+      rateInput.value = DEFAULTS.rate ?? 12;
+      // visual cue on which unit is active
+      unitHourBtn.classList.toggle('ghost', DEFAULTS.unit!=='hour');
+      unitHalfBtn.classList.toggle('ghost', DEFAULTS.unit!=='half');
+      unitHourBtn.classList.toggle('green', DEFAULTS.unit==='hour');
+      unitHalfBtn.classList.toggle('green', DEFAULTS.unit==='half');
+      syncUsingLabel();
+    }
+    unitHourBtn.addEventListener('click', ()=>{ DEFAULTS.unit='hour'; reflectDefaultsUI(); });
+    unitHalfBtn.addEventListener('click', ()=>{ DEFAULTS.unit='half'; reflectDefaultsUI(); });
+    saveDefBtn.addEventListener('click', ()=>{
+      const r = parseFloat(rateInput.value||'12');
+      DEFAULTS.rate = isNaN(r)?12:r;
+      saveLS('parking_defaults', DEFAULTS);
+      alert('預設已儲存');
+      reflectDefaultsUI();
+    });
+    resetDefBtn.addEventListener('click', ()=>{
+      localStorage.removeItem('parking_defaults');
+      DEFAULTS.unit='hour'; DEFAULTS.rate=12;
+      alert('已清空預設，恢復「每小時計 $12」');
+      reflectDefaultsUI();
+    });
+
+    function syncUsingLabel(){
+      const unitName = DEFAULTS.unit==='hour' ? '每小時' : '每半小時';
+      const price = Number(DEFAULTS.rate||12).toFixed(2);
+      document.getElementById('using').textContent = `使用預設：${unitName}｜$${price} / 單位`;
+    }
+
+    // ===== Home =====
+    const startEl = document.getElementById('start');
+    const endEl = document.getElementById('end');
+    const nowBtn = document.getElementById('now');
+    const swapBtn = document.getElementById('swap');
+    const calcBtn = document.getElementById('calc');
+    const clearBtn = document.getElementById('clear');
+    const durationEl = document.getElementById('duration');
+    const formulaEl = document.getElementById('formula');
+    const amountEl = document.getElementById('amount');
+    const stampEl = document.getElementById('stamp');
+
+    function initTimes(){
+      startEl.value = nowHM();
+      endEl.value = nowHM();
+    }
+    window.addEventListener('DOMContentLoaded', ()=>{
+      reflectDefaultsUI();
+      initTimes();
+    });
+
+    nowBtn.addEventListener('click', ()=>{ endEl.value = nowHM(); });
+    swapBtn.addEventListener('click', ()=>{ const a=startEl.value,b=endEl.value; if(a&&b){startEl.value=b;endEl.value=a;} });
+    clearBtn.addEventListener('click', ()=>{
+      initTimes();
+      durationEl.textContent='—'; formulaEl.textContent='—'; amountEl.textContent='$0.00'; stampEl.textContent='計算時間：—';
+    });
+
+    // ===== History storage =====
+    function renderHistory(){
+      const hisBody = document.getElementById('hisbody');
+      const his = loadLS('parking_history', []);
+      hisBody.innerHTML = '';
+      if(his.length===0){
+        hisBody.innerHTML = '<tr><td colspan="7" class="muted">暫無紀錄</td></tr>';
+        return;
+      }
+      for(const r of his){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.ts}</td>
+                        <td>${r.start}</td>
+                        <td>${r.end}</td>
+                        <td>${r.unit}</td>
+                        <td class="right">${Number(r.rate).toFixed(2)}</td>
+                        <td class="right">${r.dur}</td>
+                        <td class="right">${r.amt}</td>`;
+        hisBody.appendChild(tr);
+      }
+    }
+    document.getElementById('export').addEventListener('click', ()=>{
+      const his = loadLS('parking_history', []);
+      if(his.length===0){ alert('沒有歷史可匯出'); return; }
+      const header=['時間戳','入','出','單位','單價($)','時長','金額($)'];
+      const lines=[header.join(',')];
+      his.forEach(r=> lines.push([r.ts,r.start,r.end,r.unit,r.rate,r.dur,r.amt].join(',')));
+      const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='parking_history.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+    document.getElementById('clear-his').addEventListener('click', ()=>{
+      if(confirm('確定清除所有歷史？此動作不能還原。')){
+        localStorage.removeItem('parking_history'); renderHistory();
+      }
+    });
+
+    // ===== Calculation (uses defaults) =====
+    function calculate(){
+      const s=startEl.value, e=endEl.value;
+      const r=parseFloat(DEFAULTS.rate||'12');
+      if(!s||!e||isNaN(r)){ alert('請輸入完整時間，並先到「設定」儲存預設。'); return; }
+
+      let mins = toMin(e)-toMin(s);
+      if(mins<0) mins += 24*60; // 跨日
+
+      const isHour = DEFAULTS.unit==='hour';
+      const unitMins = isHour ? 60 : 30;
+      const unitName = isHour ? '小時' : '半小時';
+      const units = Math.ceil(mins / unitMins); // 向上取整
+      const total = units * r;
+
+      durationEl.textContent = fromMin(mins);
+      formulaEl.textContent = `${units}${unitName} × $${r.toFixed(2)} = $${total.toFixed(2)}`;
+      amountEl.textContent = '$' + total.toFixed(2);
+      const stamp = nowStamp();
+      stampEl.textContent = '計算時間：' + stamp;
+
+      // history
+      const row = {ts:stamp, start:s, end:e, unit:isHour?'小時':'半小時', rate:r, dur:fromMin(mins), amt:total.toFixed(2)};
+      const his = loadLS('parking_history', []);
+      his.unshift(row); saveLS('parking_history', his);
+    }
+    calcBtn.addEventListener('click', calculate);
+  </script>
+</body>
+</html>
