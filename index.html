@@ -18,8 +18,8 @@
       --tabInactive:#0b1220;
       --tabActive:#0f213f;
       --input-bg:#0b1220;
+      --chip:#0b1a33;
     }
-    /* Light theme overrides */
     .theme-light{
       --bg:#f7fafc;
       --card:#ffffff;
@@ -29,6 +29,7 @@
       --tabInactive:#f1f5f9;
       --tabActive:#e2e8f0;
       --input-bg:#ffffff;
+      --chip:#eef2ff;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -39,11 +40,7 @@
       color:var(--text);
       -webkit-text-size-adjust:100%;
     }
-    .app{
-      min-height:100%;
-      display:flex;
-      flex-direction:column;
-    }
+    .app{min-height:100%; display:flex; flex-direction:column}
     header{
       position:sticky; top:0; z-index:20;
       background:linear-gradient(180deg,rgba(12,20,38,.95),rgba(11,18,32,.95));
@@ -53,58 +50,18 @@
     }
     .head-row{display:flex; align-items:center; justify-content:space-between; gap:12px}
     .title{font-size:18px; font-weight:800; color:#93c5fd; letter-spacing:0.5px}
-    .clock{
-      font-variant-numeric:tabular-nums;
-      font-size:22px; font-weight:900;
-      color:#bfdbfe; background:#0b1a33;
-      border:1px solid var(--border); border-radius:10px;
-      padding:8px 12px; white-space:nowrap
-    }
-    /* Top Chrome-like tabs */
-    .tabs{
-      margin-top:10px;
-      display:flex; gap:10px;
-      overflow:auto; -webkit-overflow-scrolling:touch;
-      padding-bottom:6px;
-    }
-    .tabbtn{
-      flex:0 0 auto;
-      padding:12px 28px; /* wider ~2x */
-      font-size:16px; font-weight:900;
-      color:#334155;
-      border:1px solid var(--border);
-      border-bottom:none;
-      background:var(--tabInactive);
-      border-top-left-radius:14px; border-top-right-radius:14px;
-      user-select:none; cursor:pointer;
-      box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-    }
-    body:not(.theme-light) .tabbtn{ color:#cbd5e1; }
-    .tabbtn.active{
-      background:var(--tabActive);
-      color:#0f172a;
-      border-color:#21406b;
-      box-shadow: 0 6px 12px rgba(0,0,0,.25);
-    }
-    body:not(.theme-light) .tabbtn.active{ color:#e2e8f0; }
-    main{flex:1; padding:12px; max-width:860px; width:100%; margin:0 auto}
-    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:0 8px 24px rgba(0,0,0,.12);}
+    .clock{font-variant-numeric:tabular-nums; font-size:22px; font-weight:900; color:#bfdbfe; background:#0b1a33; border:1px solid var(--border); border-radius:10px; padding:8px 12px; white-space:nowrap}
+    .tabs{margin-top:10px; display:flex; gap:10px; overflow:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px}
+    .tabbtn{flex:0 0 auto; padding:12px 28px; font-size:16px; font-weight:900; color:#cbd5e1; border:1px solid var(--border); border-bottom:none; background:var(--tabInactive); border-top-left-radius:14px; border-top-right-radius:14px; user-select:none; cursor:pointer; box-shadow: inset 0 -2px 0 rgba(0,0,0,.15)}
+    .tabbtn.active{background:var(--tabActive); color:#e2e8f0; border-color:#21406b; box-shadow: 0 6px 12px rgba(0,0,0,.25)}
+    main{flex:1; padding:12px; max-width:900px; width:100%; margin:0 auto}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:0 8px 24px rgba(0,0,0,.12)}
     .section-title{font-size:16px; color:#22c55e; margin:4px 0 10px 2px}
     label{display:block; font-size:16px; margin:8px 0 6px; color:#3b82f6}
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row .col{flex:1 1 300px; min-width:0}
-    /* iPhone narrow screens: stack to avoid overlap */
-    @media (max-width: 430px){
-      .row .col{flex:1 1 100%}
-    }
-    /* Time/number inputs */
-    input[type="time"], input[type="number"]{
-      width:100%; max-width:100%;
-      font-size:22px; /* larger */
-      padding:12px 14px;
-      border-radius:12px; border:2px solid var(--border);
-      background:var(--input-bg); color:var(--text); outline:none;
-    }
+    @media (max-width: 430px){ .row .col{flex:1 1 100%} }
+    input[type="time"], input[type="number"], input[type="text"]{ width:100%; max-width:100%; font-size:22px; padding:12px 14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); color:var(--text); outline:none }
     input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
     .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
     .btn{flex:1 1 160px; font-size:18px; font-weight:900; padding:14px; border:none; border-radius:12px; cursor:pointer}
@@ -115,12 +72,14 @@
     .result{margin-top:10px; background:var(--input-bg); border:2px dashed var(--border); border-radius:12px; padding:14px; font-size:18px; line-height:1.5}
     .money{font-size:36px; font-weight:900; color:var(--yellow)}
     .muted{color:var(--muted); font-size:14px}
+    .chip{display:inline-block; margin-top:6px; padding:8px 10px; border-radius:10px; background:var(--chip); border:1px solid var(--border); color:#dbeafe; font-size:14px}
     table{width:100%; border-collapse:collapse}
     th,td{padding:10px; border-bottom:1px solid var(--border); font-size:14px}
     th{color:#3b82f6; text-align:left}
     td{color:var(--text)}
     .right{text-align:right}
     .warn{color:#ef4444; font-weight:800; margin-top:6px}
+    .filters{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0}
   </style>
 </head>
 <body>
@@ -142,6 +101,7 @@
       <section id="page-home" class="page active">
         <div class="card">
           <p class="section-title">主頁</p>
+          <div class="chip" id="presetChip">使用預設：—</div>
           <div class="row">
             <div class="col">
               <label for="start">入車時間（含秒）</label>
@@ -153,8 +113,10 @@
             </div>
           </div>
 
+          <label for="remark">備註（選填，會存入曆史）</label>
+          <input id="remark" type="text" placeholder="例如：車牌、停車場名稱…">
+
           <div class="btns">
-            <!-- "出閘=現在" blue; "計算" green -->
             <button class="btn blue" id="now">出閘＝現在</button>
             <button class="btn ghost" id="swap">入/出 對調</button>
             <button class="btn green" id="calc">計算應收（使用預設）</button>
@@ -162,12 +124,11 @@
           </div>
 
           <div class="result" aria-live="polite">
-            <div class="muted" id="using">使用預設：—</div>
-            <div>總時長：<span id="duration">—</span></div>
+            <div>總時長：<span id="duration">—</span> <span class="muted" id="freeNote"></span></div>
             <div>公式：<span id="formula">—</span></div>
             <div class="money" id="amount">$0.00</div>
             <div class="muted" id="stamp">計算時間：—</div>
-            <div class="warn" id="crossday" style="display:none">⚠️ 入車時間 > 出閘時間：超過1天</div>
+            <div class="warn" id="crossday" style="display:none">⚠️ 跨日（+1天）</div>
           </div>
         </div>
       </section>
@@ -176,35 +137,38 @@
       <section id="page-settings" class="page" style="display:none">
         <div class="card">
           <p class="section-title">設定</p>
+
           <label>計費單位（只在這裡設定）</label>
           <div class="row">
-            <div class="col">
-              <button class="btn ghost" id="unit-hour">每小時計</button>
-            </div>
-            <div class="col">
-              <button class="btn ghost" id="unit-half">每半小時計</button>
-            </div>
+            <div class="col"><button class="btn ghost" id="unit-hour">每小時計</button></div>
+            <div class="col"><button class="btn ghost" id="unit-half">每半小時計</button></div>
           </div>
 
           <label for="rate">預設收費（$ / 單位）</label>
           <input id="rate" type="number" min="0" step="0.5" placeholder="例如：12">
 
-          <label>主題</label>
           <div class="row">
             <div class="col">
-              <button class="btn ghost" id="theme-dark">黑色主題</button>
+              <label for="freeMin">免費時段（分鐘，0 表示沒有）</label>
+              <input id="freeMin" type="number" min="0" step="1" placeholder="例如：15">
             </div>
             <div class="col">
-              <button class="btn ghost" id="theme-light">淺色主題</button>
+              <label for="capFee">封頂金額（$，0 表示沒有）</label>
+              <input id="capFee" type="number" min="0" step="0.5" placeholder="例如：200">
             </div>
+          </div>
+
+          <label>主題</label>
+          <div class="row">
+            <div class="col"><button class="btn ghost" id="theme-dark">黑色主題</button></div>
+            <div class="col"><button class="btn ghost" id="theme-light">淺色主題</button></div>
           </div>
 
           <div class="btns">
             <button class="btn green" id="save-def">儲存預設</button>
             <button class="btn ghost" id="reset-def">清空預設</button>
           </div>
-
-          <p class="muted">預設將儲存在此裝置（localStorage）。主頁計算會使用這些預設。</p>
+          <p class="muted">預設儲存在此裝置（localStorage）。主頁計算會使用這些預設。</p>
         </div>
       </section>
 
@@ -212,10 +176,18 @@
       <section id="page-history" class="page" style="display:none">
         <div class="card">
           <p class="section-title">曆史</p>
+
+          <div class="filters">
+            <input id="filterText" type="text" placeholder="篩選（會搜尋所有欄位，包括備註）" style="flex:1 1 320px; font-size:18px; padding:10px 12px">
+            <button class="btn ghost" id="applyFilter" style="flex:0 0 auto">套用篩選</button>
+            <button class="btn ghost" id="clearFilter" style="flex:0 0 auto">清除篩選</button>
+          </div>
+
           <div class="btns">
             <button class="btn ghost" id="export">匯出 CSV</button>
             <button class="btn red" id="clear-his">清除歷史</button>
           </div>
+
           <div style="overflow:auto; margin-top:10px">
             <table>
               <thead>
@@ -225,12 +197,15 @@
                   <th>出</th>
                   <th>單位</th>
                   <th class="right">單價($)</th>
+                  <th class="right">免費(分)</th>
+                  <th class="right">封頂($)</th>
                   <th class="right">時長</th>
                   <th class="right">金額($)</th>
+                  <th>備註</th>
                 </tr>
               </thead>
               <tbody id="hisbody">
-                <tr><td colspan="7" class="muted">暫無紀錄</td></tr>
+                <tr><td colspan="10" class="muted">暫無紀錄</td></tr>
               </tbody>
             </table>
           </div>
@@ -247,10 +222,11 @@
       return {d, dd:pad(d.getDate()), mm:pad(d.getMonth()+1), yyyy:d.getFullYear(),
               hh:pad(d.getHours()), nn:pad(d.getMinutes()), ss:pad(d.getSeconds())};
     }
-    function nowHM(){const p=nowParts(); return p.hh+':'+p.nn+':'+p.ss;} // include seconds
+    function nowHMS(){const p=nowParts(); return p.hh+':'+p.nn+':'+p.ss;}
     function nowStamp(){const p=nowParts(); return p.dd+'/'+p.mm+'/'+p.yyyy+' '+p.hh+':'+p.nn+':'+p.ss;}
     function toSec(hms){const a=hms.split(':').map(Number); return (a[0]*3600)+(a[1]*60)+(a[2]||0);}
     function fromSec(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60; return h+'小時'+m+'分鐘'+s+'秒';}
+    function money(n){return Number(n).toFixed(2);}
     function saveLS(k,v){localStorage.setItem(k,JSON.stringify(v));}
     function loadLS(k,def){try{const v=JSON.parse(localStorage.getItem(k)); return v??def}catch(_){return def}}
 
@@ -261,47 +237,43 @@
 
     // ===== Tabs =====
     const tabButtons = document.querySelectorAll('.tabbtn');
-    const pages = {
-      home: document.getElementById('page-home'),
-      settings: document.getElementById('page-settings'),
-      history: document.getElementById('page-history'),
-    };
+    const pages = {home:document.getElementById('page-home'), settings:document.getElementById('page-settings'), history:document.getElementById('page-history')};
     function showTab(name){
       tabButtons.forEach(b=> b.classList.toggle('active', b.dataset.tab===name));
       Object.entries(pages).forEach(([k,el])=> el.style.display = (k===name?'block':'none'));
       if(name==='history') renderHistory();
-      if(name==='home') syncUsingLabel();
+      if(name==='home') { syncUsingLabel(); reflectPresetChip(); }
     }
     tabButtons.forEach(b=> b.addEventListener('click', ()=> showTab(b.dataset.tab)));
 
     // ===== Defaults (Settings) =====
-    const DEFAULTS = loadLS('parking_defaults', {unit:'hour', rate:12, theme:'dark'});
+    const DEFAULTS = loadLS('parking_defaults', {unit:'hour', rate:12, freeMin:0, capFee:0, theme:'dark'});
     const unitHourBtn = document.getElementById('unit-hour');
     const unitHalfBtn = document.getElementById('unit-half');
     const rateInput = document.getElementById('rate');
+    const freeMinInput = document.getElementById('freeMin');
+    const capFeeInput = document.getElementById('capFee');
     const saveDefBtn = document.getElementById('save-def');
     const resetDefBtn = document.getElementById('reset-def');
     const themeDarkBtn = document.getElementById('theme-dark');
     const themeLightBtn = document.getElementById('theme-light');
 
-    function applyTheme(){
-      document.body.classList.toggle('theme-light', DEFAULTS.theme==='light');
-    }
+    function applyTheme(){ document.body.classList.toggle('theme-light', DEFAULTS.theme==='light'); }
 
     function reflectDefaultsUI(){
       rateInput.value = DEFAULTS.rate ?? 12;
-      // unit visual
+      freeMinInput.value = DEFAULTS.freeMin ?? 0;
+      capFeeInput.value = DEFAULTS.capFee ?? 0;
       unitHourBtn.classList.toggle('ghost', DEFAULTS.unit!=='hour');
       unitHalfBtn.classList.toggle('ghost', DEFAULTS.unit!=='half');
       unitHourBtn.classList.toggle('green', DEFAULTS.unit==='hour');
       unitHalfBtn.classList.toggle('green', DEFAULTS.unit==='half');
-      // theme visual
       themeDarkBtn.classList.toggle('green', DEFAULTS.theme==='dark');
       themeLightBtn.classList.toggle('green', DEFAULTS.theme==='light');
       themeDarkBtn.classList.toggle('ghost', DEFAULTS.theme!=='dark');
       themeLightBtn.classList.toggle('ghost', DEFAULTS.theme!=='light');
       applyTheme();
-      syncUsingLabel();
+      syncUsingLabel(); reflectPresetChip();
     }
     unitHourBtn.addEventListener('click', ()=>{ DEFAULTS.unit='hour'; reflectDefaultsUI(); });
     unitHalfBtn.addEventListener('click', ()=>{ DEFAULTS.unit='half'; reflectDefaultsUI(); });
@@ -310,22 +282,32 @@
 
     saveDefBtn.addEventListener('click', ()=>{
       const r = parseFloat(rateInput.value||'12');
+      const f = parseInt(freeMinInput.value||'0',10);
+      const c = parseFloat(capFeeInput.value||'0');
       DEFAULTS.rate = isNaN(r)?12:r;
+      DEFAULTS.freeMin = isNaN(f)?0:f;
+      DEFAULTS.capFee = isNaN(c)?0:c;
       saveLS('parking_defaults', DEFAULTS);
       alert('預設已儲存');
       reflectDefaultsUI();
     });
     resetDefBtn.addEventListener('click', ()=>{
       localStorage.removeItem('parking_defaults');
-      DEFAULTS.unit='hour'; DEFAULTS.rate=12; DEFAULTS.theme='dark';
-      alert('已清空預設，恢復「每小時計 $12 / 黑色背景」');
+      DEFAULTS.unit='hour'; DEFAULTS.rate=12; DEFAULTS.freeMin=0; DEFAULTS.capFee=0; DEFAULTS.theme='dark';
+      alert('已清空預設，恢復「每小時計 $12、無免費、無封頂、黑色背景」');
       reflectDefaultsUI();
     });
 
     function syncUsingLabel(){
       const unitName = DEFAULTS.unit==='hour' ? '每小時' : '每半小時';
-      const price = Number(DEFAULTS.rate||12).toFixed(2);
-      document.getElementById('using').textContent = `使用預設：${unitName}｜$${price} / 單位`;
+      const price = money(DEFAULTS.rate||12);
+      document.getElementById('using')?.textContent = `使用預設：${unitName}｜$${price} / 單位`;
+    }
+    function reflectPresetChip(){
+      const unitName = DEFAULTS.unit==='hour' ? '每小時' : '每半小時';
+      const free = DEFAULTS.freeMin? `｜免費前 ${DEFAULTS.freeMin} 分鐘` : '';
+      const cap = (DEFAULTS.capFee && DEFAULTS.capFee>0)? `｜封頂 $${money(DEFAULTS.capFee)}` : '';
+      document.getElementById('presetChip').textContent = `使用預設：${unitName}｜$${money(DEFAULTS.rate)} / 單位${free}${cap}`;
     }
 
     // ===== Home =====
@@ -336,54 +318,63 @@
     const calcBtn = document.getElementById('calc');
     const clearBtn = document.getElementById('clear');
     const durationEl = document.getElementById('duration');
+    const freeNoteEl = document.getElementById('freeNote');
     const formulaEl = document.getElementById('formula');
     const amountEl = document.getElementById('amount');
     const stampEl = document.getElementById('stamp');
     const crossdayEl = document.getElementById('crossday');
+    const remarkEl = document.getElementById('remark');
 
-    function initTimes(){
-      startEl.value = nowHM();
-      endEl.value = nowHM();
-    }
-    window.addEventListener('DOMContentLoaded', ()=>{
-      reflectDefaultsUI();
-      initTimes();
-    });
+    function initTimes(){ startEl.value = nowHMS(); endEl.value = nowHMS(); }
+    window.addEventListener('DOMContentLoaded', ()=>{ reflectDefaultsUI(); initTimes(); });
 
-    nowBtn.addEventListener('click', ()=>{ endEl.value = nowHM(); });
+    nowBtn.addEventListener('click', ()=>{ endEl.value = nowHMS(); });
     swapBtn.addEventListener('click', ()=>{ const a=startEl.value,b=endEl.value; if(a&&b){startEl.value=b;endEl.value=a;} });
     clearBtn.addEventListener('click', ()=>{
       initTimes();
-      durationEl.textContent='—'; formulaEl.textContent='—'; amountEl.textContent='$0.00'; stampEl.textContent='計算時間：—'; crossdayEl.style.display='none';
+      remarkEl.value='';
+      durationEl.textContent='—'; freeNoteEl.textContent=''; formulaEl.textContent='—'; amountEl.textContent='$0.00'; stampEl.textContent='計算時間：—'; crossdayEl.style.display='none';
     });
 
-    // ===== History storage =====
+    // ===== History storage & filter =====
+    function matchesFilter(text,kw){
+      if(!kw) return true;
+      return (text||'').toString().toLowerCase().includes(kw.toLowerCase());
+    }
     function renderHistory(){
       const hisBody = document.getElementById('hisbody');
+      const kw = document.getElementById('filterText').value.trim();
       const his = loadLS('parking_history', []);
       hisBody.innerHTML = '';
-      if(his.length===0){
-        hisBody.innerHTML = '<tr><td colspan="7" class="muted">暫無紀錄</td></tr>';
+      const filtered = his.filter(r=> Object.values(r).some(v=> matchesFilter(v, kw)));
+      if(filtered.length===0){
+        hisBody.innerHTML = '<tr><td colspan="10" class="muted">沒有符合的紀錄</td></tr>';
         return;
       }
-      for(const r of his){
+      for(const r of filtered){
         const tr = document.createElement('tr');
         tr.innerHTML = `<td>${r.ts}</td>
                         <td>${r.start}</td>
                         <td>${r.end}</td>
                         <td>${r.unit}</td>
-                        <td class="right">${Number(r.rate).toFixed(2)}</td>
+                        <td class="right">${money(r.rate)}</td>
+                        <td class="right">${r.freeMin||0}</td>
+                        <td class="right">${money(r.capFee||0)}</td>
                         <td class="right">${r.dur}</td>
-                        <td class="right">${r.amt}</td>`;
+                        <td class="right">${money(r.amt)}</td>
+                        <td>${(r.remark||'')}</td>`;
         hisBody.appendChild(tr);
       }
     }
+    document.getElementById('applyFilter').addEventListener('click', renderHistory);
+    document.getElementById('clearFilter').addEventListener('click', ()=>{ document.getElementById('filterText').value=''; renderHistory(); });
+
     document.getElementById('export').addEventListener('click', ()=>{
       const his = loadLS('parking_history', []);
       if(his.length===0){ alert('沒有歷史可匯出'); return; }
-      const header=['時間戳','入','出','單位','單價($)','時長','金額($)'];
+      const header=['時間戳','入','出','單位','單價($)','免費(分)','封頂($)','時長','金額($)','備註'];
       const lines=[header.join(',')];
-      his.forEach(r=> lines.push([r.ts,r.start,r.end,r.unit,r.rate,r.dur,r.amt].join(',')));
+      his.forEach(r=> lines.push([r.ts,r.start,r.end,r.unit,money(r.rate),r.freeMin||0,money(r.capFee||0),r.dur,money(r.amt), (r.remark||'')].map(x=> `"${String(x).replace(/"/g,'""')}"`).join(',')));
       const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a'); a.href=url; a.download='parking_history.csv'; a.click(); URL.revokeObjectURL(url);
@@ -398,33 +389,42 @@
     function calculate(){
       const s=startEl.value, e=endEl.value;
       const r=parseFloat(DEFAULTS.rate||'12');
+      const freeM = parseInt(DEFAULTS.freeMin||'0',10) || 0;
+      const cap = parseFloat(DEFAULTS.capFee||'0') || 0;
       if(!s||!e||isNaN(r)){ alert('請輸入完整時間，並先到「設定」儲存預設。'); return; }
 
       let secs = toSec(e)-toSec(s);
-      crossdayEl.style.display='none';
-      if(secs<0){ // 入 > 出 → 超過1天
-        crossdayEl.style.display='block';
-        secs += 24*3600;
-      }
+      let crossed = false;
+      if(secs<0){ crossed=true; secs += 24*3600; } // 跨日(+1天) 正向處理
+      crossdayEl.style.display = crossed ? 'block' : 'none';
+
+      const freeSecs = Math.max(0, freeM*60);
+      const billSecs = Math.max(0, secs - freeSecs);
 
       const isHour = DEFAULTS.unit==='hour';
       const unitSecs = isHour ? 3600 : 1800;
       const unitName = isHour ? '小時' : '半小時';
-      const units = Math.ceil(secs / unitSecs); // 向上取整
-      const total = units * r;
+      const units = Math.ceil(billSecs / unitSecs);
+      let total = units * r;
+      const hitCap = (cap>0 && total>cap);
+      if(hitCap) total = cap;
 
       durationEl.textContent = fromSec(secs);
-      formulaEl.textContent = `${units}${unitName} × $${r.toFixed(2)} = $${total.toFixed(2)}`;
-      amountEl.textContent = '$' + total.toFixed(2);
+      freeNoteEl.textContent = freeSecs>0 ? `（已扣除免費 ${freeM} 分鐘）` : '';
+      const baseFormula = `${units}${unitName} × $${money(r)} = $${money(units*r)}`;
+      const capNote = hitCap ? ` → 套用封頂 $${money(cap)} → $${money(total)}` : '';
+      formulaEl.textContent = baseFormula + capNote;
+      amountEl.textContent = '$' + money(total);
       const stamp = nowStamp();
       stampEl.textContent = '計算時間：' + stamp;
 
-      // history
-      const row = {ts:stamp, start:s, end:e, unit:isHour?'小時':'半小時', rate:r, dur:fromSec(secs), amt:total.toFixed(2)};
+      const row = {ts:stamp, start:s, end:e, unit:isHour?'小時':'半小時', rate:r, freeMin:freeM, capFee:cap, dur:fromSec(secs), amt:total, remark: (remarkEl.value||'')};
       const his = loadLS('parking_history', []);
       his.unshift(row); saveLS('parking_history', his);
     }
-    calcBtn.addEventListener('click', calculate);
+    document.getElementById('calc').addEventListener('click', calculate);
+
+    window.addEventListener('DOMContentLoaded', reflectDefaultsUI);
   </script>
 </body>
 </html>
