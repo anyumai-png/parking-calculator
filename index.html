@@ -78,11 +78,11 @@
           <div class="chip" id="presetChip">使用預設：—</div>
           <div class="row">
             <div class="col">
-              <label for="start">入車時間（含秒）</label>
+              <label for="start">入場時間（含秒）</label>
               <input id="start" type="time" step="1">
             </div>
             <div class="col">
-              <label for="end">出閘時間（含秒）</label>
+              <label for="end">離場時間（含秒）</label>
               <input id="end" type="time" step="1">
             </div>
           </div>
@@ -95,8 +95,8 @@
           <div class="btns">
             <button class="btn blue" id="now" onclick="setNow()">出閘＝現在</button>
             <button class="btn ghost" id="swap" onclick="swapTimes()">入/出 對調</button>
-            <button class="btn green" id="calc" onclick="calculate()">計算應收（使用預設）</button>
-            <button class="btn ghost" id="clear" onclick="clearForm()">清除</button>
+            <button class="btn green" id="calc" onclick="calculate()">計算應收</button>
+            <button class="btn ghost" id="clear" onclick="clearForm()">重設</button>
           </div>
 
           <div class="result" aria-live="polite">
