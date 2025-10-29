@@ -6,52 +6,75 @@
   <title>泊車收費計算器</title>
   <style>
     :root{
-      --bg:#0b1220; --card:#0f172a; --text:#e5e7eb; --muted:#94a3b8; --border:#1f2937;
+      --bg:#0b1220; --card:#0f172a; --text:#e5e7eb; --muted:#a9b2bd; --border:#1f2937;
       --blue:#3b82f6; --green:#22c55e; --yellow:#fde047; --red:#ef4444;
       --tabInactive:#0b1220; --tabActive:#0f213f; --input-bg:#0b1220; --chip:#0b1a33;
+      --focus:#a78bfa;
     }
     .theme-light{
-      --bg:#f7fafc; --card:#ffffff; --text:#0f172a; --muted:#475569; --border:#cbd5e1;
-      --tabInactive:#f1f5f9; --tabActive:#e2e8f0; --input-bg:#ffffff; --chip:#eef2ff;
+      --bg:#ffffff; --card:#ffffff; --text:#111827; --muted:#334155; --border:#0f172a33;
+      --tabInactive:#e5e7eb; --tabActive:#ffffff; --input-bg:#ffffff; --chip:#eef2ff;
+      --blue:#1d4ed8; --green:#15803d; --yellow:#b45309; --red:#b91c1c; --focus:#7c3aed;
     }
-    *{box-sizing:border-box} html,body{height:100%}
+    *{box-sizing:border-box}
+    html,body{height:100%;}
     body{margin:0; font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,Segoe UI,Roboto,Arial,sans-serif;
-         background:var(--bg); color:var(--text); -webkit-text-size-adjust:100%}
+      background:var(--bg); color:var(--text); -webkit-text-size-adjust:100%; line-height:1.35;}
     .app{min-height:100%; display:flex; flex-direction:column}
     header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,rgba(12,20,38,.95),rgba(11,18,32,.95));
-           border-bottom:1px solid var(--border); padding:12px env(safe-area-inset-right) 8px env(safe-area-inset-left); backdrop-filter: blur(6px)}
-    .head-row{display:flex; align-items:center; justify-content:space-between; gap:12px}
-    .title{font-size:18px; font-weight:800; color:#93c5fd; letter-spacing:0.5px}
+      border-bottom:1px solid var(--border); padding:12px env(safe-area-inset-right) 8px env(safe-area-inset-left); backdrop-filter: blur(6px)}
+    .theme-light header{ background:linear-gradient(180deg,#f8fafc,#f1f5f9); }
+    .head-row{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+    .title{font-size:20px; font-weight:900; color:#93c5fd; letter-spacing:0.5px}
+    .theme-light .title{ color:#1d4ed8 }
     .clock{font-variant-numeric:tabular-nums; font-size:22px; font-weight:900; color:#bfdbfe; background:#0b1a33;
-           border:1px solid var(--border); border-radius:10px; padding:8px 12px; white-space:nowrap}
+      border:1px solid var(--border); border-radius:10px; padding:8px 12px; white-space:nowrap}
+    .theme-light .clock{ color:#0f172a; background:#e5e7eb; border-color:#cbd5e1 }
     .tabs{margin-top:10px; display:flex; gap:10px; overflow:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px}
-    .tabbtn{flex:0 0 auto; padding:12px 28px; font-size:16px; font-weight:900; color:#cbd5e1; border:1px solid var(--border);
-            border-bottom:none; background:var(--tabInactive); border-top-left-radius:14px; border-top-right-radius:14px;
-            user-select:none; cursor:pointer; box-shadow: inset 0 -2px 0 rgba(0,0,0,.15)}
-    .tabbtn.active{background:var(--tabActive); color:#e2e8f0; border-color:#21406b; box-shadow: 0 6px 12px rgba(0,0,0,.25)}
+    .tabbtn{flex:0 0 auto; padding:14px 36px; font-size:18px; font-weight:900; color:#cbd5e1; border:1px solid var(--border);
+      border-bottom:none; background:var(--tabInactive); border-top-left-radius:14px; border-top-right-radius:14px; user-select:none; cursor:pointer;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,.15)}
+    .tabbtn.active{background:var(--tabActive); color:var(--text); border-color:#21406b; box-shadow: 0 6px 12px rgba(0,0,0,.25)}
+    .theme-light .tabbtn{ color:#111827; border-color:#cbd5e1 }
+    .theme-light .tabbtn.active{ border-color:#94a3b8; box-shadow: 0 6px 12px rgba(0,0,0,.08) }
     main{flex:1; padding:12px; max-width:900px; width:100%; margin:0 auto}
-    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:0 8px 24px rgba(0,0,0,.12)}
-    .section-title{font-size:16px; color:#22c55e; margin:4px 0 10px 2px}
-    label{display:block; font-size:16px; margin:8px 0 6px; color:#3b82f6}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.12)}
+    .theme-light .card{ box-shadow:0 6px 18px rgba(0,0,0,.06) }
+    .section-title{font-size:17px; color:#22c55e; margin:2px 0 12px 2px}
+    .theme-light .section-title{ color:#15803d }
+    label{display:block; font-size:16px; margin:8px 0 6px; color:#93c5fd}
+    .theme-light label{ color:#1d4ed8 }
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row .col{flex:1 1 300px; min-width:0}
     @media (max-width: 430px){ .row .col{flex:1 1 100%} }
-    input[type="time"], input[type="number"], input[type="text"]{ width:100%; max-width:100%; font-size:22px; padding:12px 14px;
-      border-radius:12px; border:2px solid var(--border); background:var(--input-bg); color:var(--text); outline:none }
+    input[type="time"], input[type="number"], input[type="text"]{
+      width:100%; max-width:100%; font-size:22px; padding:12px 14px; border-radius:12px;
+      border:2px solid var(--border); background:var(--input-bg); color:var(--text); outline:none
+    }
+    input:focus{ box-shadow:0 0 0 3px var(--focus) inset; }
     input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
     .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
-    .btn{flex:1 1 160px; font-size:18px; font-weight:900; padding:14px; border:none; border-radius:12px; cursor:pointer}
-    .btn.blue{background:var(--blue); color:#051225; box-shadow:0 8px 18px rgba(59,130,246,.25)}
-    .btn.green{background:var(--green); color:#05180f; box-shadow:0 8px 18px rgba(34,197,94,.25)}
+    .btn{flex:1 1 200px; font-size:19px; font-weight:900; padding:16px; border:none; border-radius:14px; cursor:pointer}
+    .btn.blue{background:var(--blue); color:#fff}
+    .btn.green{background:var(--green); color:#fff}
     .btn.ghost{background:var(--input-bg); color:var(--text); border:2px solid var(--border)}
-    .btn.red{background:var(--red); color:#140a0a}
+    .btn.red{background:var(--red); color:#fff}
+    .seg{display:flex; gap:8px; flex-wrap:wrap}
+    .seg .chipbtn{flex:1 1 150px; padding:10px 12px; border-radius:12px; border:2px solid var(--border);
+      background:var(--input-bg); color:var(--text); font-weight:800; font-size:18px; cursor:pointer}
+    .seg .chipbtn.active{ background:#0b1a33; color:#dbeafe; border-color:#21406b }
+    .theme-light .seg .chipbtn.active{ background:#e5e7eb; color:#111827; border-color:#64748b }
     .result{margin-top:10px; background:var(--input-bg); border:2px dashed var(--border); border-radius:12px; padding:14px; font-size:18px; line-height:1.5}
-    .money{font-size:36px; font-weight:900; color:#fde047}
-    .muted{color:#94a3b8; font-size:14px}
-    .chip{display:inline-block; margin-top:6px; padding:8px 10px; border-radius:10px; background:var(--chip); border:1px solid var(--border); color:#dbeafe; font-size:14px}
+    .money{font-size:38px; font-weight:900; color:#fde047}
+    .theme-light .money{ color:#b45309 }
+    .muted{color:var(--muted); font-size:15px}
+    .chip{display:inline-block; margin:6px 0 10px; padding:8px 10px; border-radius:10px; background:var(--chip); border:1px solid var(--border); color:#dbeafe; font-size:14px}
+    .theme-light .chip{ color:#1e293b }
     table{width:100%; border-collapse:collapse}
-    th,td{padding:10px; border-bottom:1px solid var(--border); font-size:14px}
-    th{color:#3b82f6; text-align:left} td{color:var(--text)} .right{text-align:right}
+    th,td{padding:12px; border-bottom:1px solid var(--border); font-size:16px}
+    th{color:#93c5fd; text-align:left}
+    .theme-light th{ color:#1d4ed8 }
+    td{color:var(--text)} .right{text-align:right}
     .warn{color:#ef4444; font-weight:800; margin-top:6px}
     .filters{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0}
   </style>
@@ -61,7 +84,7 @@
     <header>
       <div class="head-row">
         <div class="title">🚗 泊車收費計算器</div>
-        <div class="clock" id="clock">--/--/---- --:--:--</div>
+        <div class="clock" id="clock">--/--/---- --:--</div>
       </div>
       <nav class="tabs" role="tablist" aria-label="Navigation">
         <button class="tabbtn active" data-tab="home" id="tab-home" onclick="showTab('home')">主頁</button>
@@ -76,18 +99,31 @@
         <div class="card">
           <p class="section-title">主頁</p>
           <div class="chip" id="presetChip">使用預設：—</div>
+
+          <label>車輛類型</label>
+          <div class="seg" role="group" aria-label="vehicle type">
+            <button class="chipbtn active" id="veh-private" onclick="setVeh('private')">私家車</button>
+            <button class="chipbtn" id="veh-truck" onclick="setVeh('truck')">貨車</button>
+          </div>
+
           <div class="row">
             <div class="col">
-              <label for="start">入場時間（含秒）</label>
-              <input id="start" type="time" step="1">
+              <label for="start">入車時間（HH:MM）</label>
+              <input id="start" type="time" step="60">
             </div>
             <div class="col">
-              <label for="end">離場時間（含秒）</label>
-              <input id="end" type="time" step="1">
+              <label for="end">出閘時間（HH:MM）</label>
+              <input id="end" type="time" step="60">
             </div>
           </div>
 
-          <div id="remarkWrap">
+          <label>商場泊車優惠</label>
+          <div class="seg" role="group" aria-label="mall promo eligible">
+            <button class="chipbtn" id="promo-no" onclick="setPromo(false)">未達標</button>
+            <button class="chipbtn" id="promo-yes" onclick="setPromo(true)">已達標（免時數套用）</button>
+          </div>
+
+          <div id="remarkWrap" style="display:none">
             <label for="remark">備註（選填，會存入曆史）</label>
             <input id="remark" type="text" placeholder="例如：車牌、停車場名稱…">
           </div>
@@ -95,8 +131,8 @@
           <div class="btns">
             <button class="btn blue" id="now" onclick="setNow()">出閘＝現在</button>
             <button class="btn ghost" id="swap" onclick="swapTimes()">入/出 對調</button>
-            <button class="btn green" id="calc" onclick="calculate()">計算應收</button>
-            <button class="btn ghost" id="clear" onclick="clearForm()">重設</button>
+            <button class="btn green" id="calc" onclick="calculate()">計算應收（使用預設）</button>
+            <button class="btn ghost" id="clear" onclick="clearForm()">清除</button>
           </div>
 
           <div class="result" aria-live="polite">
@@ -105,6 +141,7 @@
             <div class="money" id="amount">$0.00</div>
             <div class="muted" id="stamp">計算時間：—</div>
             <div class="warn" id="crossday" style="display:none">⚠️ 跨日（+1天）</div>
+            <div class="muted" id="promoText"></div>
           </div>
         </div>
       </section>
@@ -120,8 +157,17 @@
             <div class="col"><button class="btn ghost" id="unit-half" onclick="setUnit('half')">每半小時計</button></div>
           </div>
 
-          <label for="rate">預設收費（$ / 單位）</label>
-          <input id="rate" type="number" min="0" step="0.5" placeholder="例如：12">
+          <label>預設收費（$ / 單位）</label>
+          <div class="row">
+            <div class="col">
+              <label for="ratePrivate">私家車單價</label>
+              <input id="ratePrivate" type="number" min="0" step="0.5" placeholder="例如：12">
+            </div>
+            <div class="col">
+              <label for="rateTruck">貨車單價</label>
+              <input id="rateTruck" type="number" min="0" step="0.5" placeholder="例如：15">
+            </div>
+          </div>
 
           <div class="row">
             <div class="col">
@@ -134,16 +180,31 @@
             </div>
           </div>
 
+          <label>商場泊車優惠</label>
+          <div class="row">
+            <div class="col">
+              <label for="promoHours">免時數（小時）</label>
+              <input id="promoHours" type="number" min="0" step="0.5" placeholder="例如：2">
+            </div>
+            <div class="col">
+              <label for="promoDefault">預設是否達標（主頁可切換）</label>
+              <select id="promoDefault" style="width:100%; font-size:18px; padding:12px 14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); color:var(--text)">
+                <option value="false">未達標</option>
+                <option value="true">已達標</option>
+              </select>
+            </div>
+          </div>
+
           <label>主題</label>
           <div class="row">
             <div class="col"><button class="btn ghost" id="theme-dark" onclick="setTheme('dark')">黑色主題</button></div>
-            <div class="col"><button class="btn ghost" id="theme-light" onclick="setTheme('light')">淺色主題</button></div>
+            <div class="col"><button class="btn ghost" id="theme-light" onclick="setTheme('light')">淺色主題（高對比）</button></div>
           </div>
 
-          <label class="switch">備註欄顯示</label>
+          <label>備註欄顯示</label>
           <div class="row">
             <div class="col"><button class="btn ghost" id="remark-on" onclick="setRemarkVisible(true)">顯示備註</button></div>
-            <div class="col"><button class="btn ghost" id="remark-off" onclick="setRemarkVisible(false)">隱藏備註</button></div>
+            <div class="col"><button class="btn ghost" id="remark-off" onclick="setRemarkVisible(false)">隱藏備註（預設）</button></div>
           </div>
 
           <div class="btns">
@@ -174,12 +235,12 @@
             <table>
               <thead>
                 <tr>
-                  <th>時間戳</th><th>入</th><th>出</th><th>單位</th>
+                  <th>時間戳</th><th>入</th><th>出</th><th>車種</th><th>單位</th>
                   <th class="right">單價($)</th><th class="right">免費(分)</th><th class="right">封頂($)</th>
-                  <th class="right">時長</th><th class="right">金額($)</th><th>備註</th>
+                  <th class="right">時長</th><th class="right">金額($)</th><th>備註</th><th>優惠</th>
                 </tr>
               </thead>
-              <tbody id="hisbody"><tr><td colspan="10" class="muted">暫無紀錄</td></tr></tbody>
+              <tbody id="hisbody"><tr><td colspan="12" class="muted">暫無紀錄</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -190,17 +251,26 @@
   <script>
     // ===== Helpers =====
     function pad(n){return String(n).padStart(2,'0');}
-    function nowParts(){const d=new Date(); return {d, dd:pad(d.getDate()), mm:pad(d.getMonth()+1), yyyy:d.getFullYear(), hh:pad(d.getHours()), nn:pad(d.getMinutes()), ss:pad(d.getSeconds())};}
-    function nowHMS(){const p=nowParts(); return p.hh+':'+p.nn+':'+p.ss;}
-    function nowStamp(){const p=nowParts(); return p.dd+'/'+p.mm+'/'+p.yyyy+' '+p.hh+':'+p.nn+':'+p.ss;}
-    function toSec(hms){const a=hms.split(':').map(Number); return (a[0]*3600)+(a[1]*60)+(a[2]||0);}
-    function fromSec(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60; return h+'小時'+m+'分鐘'+s+'秒';}
+    function nowParts(){const d=new Date(); return {d, dd:pad(d.getDate()), mm:pad(d.getMonth()+1), yyyy:d.getFullYear(), hh:pad(d.getHours()), nn:pad(d.getMinutes())};}
+    function nowHM(){const p=nowParts(); return p.hh+':'+p.nn;}
+    function nowStamp(){const p=nowParts(); return p.dd+'/'+p.mm+'/'+p.yyyy+' '+p.hh+':'+p.nn;}
+    function toSecHM(hm){const a=hm.split(':').map(Number); return (a[0]*3600)+(a[1]*60);}
+    function fromSec(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60); return h+'小時'+m+'分鐘';}
     function money(n){return Number(n).toFixed(2);}
     function saveLS(k,v){localStorage.setItem(k,JSON.stringify(v));}
     function loadLS(k,def){try{const v=JSON.parse(localStorage.getItem(k)); return v==null?def:v}catch(_){return def}}
 
     // ===== App State =====
-    var DEFAULTS = loadLS('parking_defaults', {unit:'hour', rate:12, freeMin:0, capFee:0, theme:'dark', showRemark:true});
+    var DEFAULTS = loadLS('parking_defaults', {
+      unit:'hour',
+      ratePrivate:12, rateTruck:15,
+      freeMin:0, capFee:0,
+      theme:'dark',
+      showRemark:false,
+      promoHours:2,
+      promoDefault:false
+    });
+    var UI = { veh:'private', promo: DEFAULTS.promoDefault===true };
 
     // ===== Clock =====
     function tickClock(){ var el=document.getElementById('clock'); if(el) el.textContent = nowStamp(); }
@@ -215,68 +285,86 @@
       });
       tabs.forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
       if(name==='history'){ renderHistory(); }
-      if(name==='home'){ syncUsingLabel(); reflectPresetChip(); reflectRemarkVisibility(); }
+      if(name==='home'){ reflectPresetChip(); reflectRemarkVisibility(); reflectVehicleButtons(); reflectPromoButtons(); }
     }
 
     // ===== Settings logic =====
     function applyTheme(){ document.body.classList.toggle('theme-light', DEFAULTS.theme==='light'); }
     function reflectDefaultsUI(){
-      var rateInput=document.getElementById('rate');
+      var rp=document.getElementById('ratePrivate');
+      var rt=document.getElementById('rateTruck');
       var freeMinInput=document.getElementById('freeMin');
       var capFeeInput=document.getElementById('capFee');
       var uh=document.getElementById('unit-hour'); var uf=document.getElementById('unit-half');
       var tDark=document.getElementById('theme-dark'); var tLight=document.getElementById('theme-light');
       var rOn=document.getElementById('remark-on'); var rOff=document.getElementById('remark-off');
-      if(rateInput) rateInput.value = DEFAULTS.rate;
+      var pH=document.getElementById('promoHours'); var pD=document.getElementById('promoDefault');
+      if(rp) rp.value = DEFAULTS.ratePrivate;
+      if(rt) rt.value = DEFAULTS.rateTruck;
       if(freeMinInput) freeMinInput.value = DEFAULTS.freeMin;
       if(capFeeInput) capFeeInput.value = DEFAULTS.capFee;
+      if(pH) pH.value = DEFAULTS.promoHours;
+      if(pD) pD.value = String(DEFAULTS.promoDefault===true);
       if(uh){ uh.classList.toggle('green', DEFAULTS.unit==='hour'); uh.classList.toggle('ghost', DEFAULTS.unit!=='hour'); }
       if(uf){ uf.classList.toggle('green', DEFAULTS.unit==='half'); uf.classList.toggle('ghost', DEFAULTS.unit!=='half'); }
       if(tDark){ tDark.classList.toggle('green', DEFAULTS.theme==='dark'); tDark.classList.toggle('ghost', DEFAULTS.theme!=='dark'); }
       if(tLight){ tLight.classList.toggle('green', DEFAULTS.theme==='light'); tLight.classList.toggle('ghost', DEFAULTS.theme!=='light'); }
       if(rOn){ rOn.classList.toggle('green', DEFAULTS.showRemark===true); rOn.classList.toggle('ghost', DEFAULTS.showRemark!==true); }
       if(rOff){ rOff.classList.toggle('green', DEFAULTS.showRemark===false); rOff.classList.toggle('ghost', DEFAULTS.showRemark!==false); }
-      applyTheme(); syncUsingLabel(); reflectPresetChip(); reflectRemarkVisibility();
+      applyTheme(); reflectPresetChip(); reflectRemarkVisibility(); reflectVehicleButtons(); reflectPromoButtons();
     }
     function setUnit(u){ DEFAULTS.unit=u; reflectDefaultsUI(); }
     function setTheme(t){ DEFAULTS.theme=t; reflectDefaultsUI(); }
     function setRemarkVisible(v){ DEFAULTS.showRemark=!!v; reflectDefaultsUI(); }
     function saveDefaults(){
-      var rate=parseFloat(document.getElementById('rate').value||'12');
+      var rp=parseFloat(document.getElementById('ratePrivate').value||'12');
+      var rt=parseFloat(document.getElementById('rateTruck').value||'15');
       var freeMin=parseInt(document.getElementById('freeMin').value||'0',10)||0;
       var capFee=parseFloat(document.getElementById('capFee').value||'0')||0;
-      DEFAULTS.rate=isNaN(rate)?12:rate;
+      var promoHours=parseFloat(document.getElementById('promoHours').value||'2')||0;
+      var promoDefault=(document.getElementById('promoDefault').value==='true');
+      DEFAULTS.ratePrivate=isNaN(rp)?12:rp;
+      DEFAULTS.rateTruck=isNaN(rt)?15:rt;
       DEFAULTS.freeMin=isNaN(freeMin)?0:freeMin;
       DEFAULTS.capFee=isNaN(capFee)?0:capFee;
+      DEFAULTS.promoHours=isNaN(promoHours)?0:promoHours;
+      DEFAULTS.promoDefault=promoDefault;
       saveLS('parking_defaults', DEFAULTS);
       alert('預設已儲存');
       reflectDefaultsUI();
     }
     function resetDefaults(){
       localStorage.removeItem('parking_defaults');
-      DEFAULTS={unit:'hour', rate:12, freeMin:0, capFee:0, theme:'dark', showRemark:true};
+      DEFAULTS={unit:'hour', ratePrivate:12, rateTruck:15, freeMin:0, capFee:0, theme:'dark', showRemark:false, promoHours:2, promoDefault:false};
       alert('已清空預設，恢復預設值');
       reflectDefaultsUI();
-    }
-    function syncUsingLabel(){
-      var unitName = DEFAULTS.unit==='hour' ? '每小時' : '每半小時';
-      var price = money(DEFAULTS.rate||12);
-      var el=document.getElementById('using'); if(el){ el.textContent = '使用預設：'+unitName+'｜$'+price+' / 單位'; }
     }
     function reflectPresetChip(){
       var unitName = DEFAULTS.unit==='hour' ? '每小時' : '每半小時';
       var free = DEFAULTS.freeMin ? '｜免費前 '+DEFAULTS.freeMin+' 分鐘' : '';
       var cap = (DEFAULTS.capFee && DEFAULTS.capFee>0) ? '｜封頂 $'+money(DEFAULTS.capFee) : '';
-      var chip=document.getElementById('presetChip'); if(chip){ chip.textContent = '使用預設：'+unitName+'｜$'+money(DEFAULTS.rate)+' / 單位'+free+cap; }
+      var chip=document.getElementById('presetChip'); if(chip){ chip.textContent = '使用預設：'+unitName+free+cap+'｜私家車 $'+money(DEFAULTS.ratePrivate)+'｜貨車 $'+money(DEFAULTS.rateTruck); }
     }
     function reflectRemarkVisibility(){
       var wrap=document.getElementById('remarkWrap');
       if(wrap){ wrap.style.display = (DEFAULTS.showRemark? 'block':'none'); }
     }
+    function reflectVehicleButtons(){
+      var p=document.getElementById('veh-private'); var t=document.getElementById('veh-truck');
+      if(p) p.classList.toggle('active', UI.veh==='private');
+      if(t) t.classList.toggle('active', UI.veh==='truck');
+    }
+    function reflectPromoButtons(){
+      var no=document.getElementById('promo-no'); var yes=document.getElementById('promo-yes');
+      if(no) no.classList.toggle('active', UI.promo===false);
+      if(yes) yes.classList.toggle('active', UI.promo===true);
+    }
+    function setVeh(v){ UI.veh=v; reflectVehicleButtons(); }
+    function setPromo(v){ UI.promo=!!v; reflectPromoButtons(); }
 
     // ===== Home actions =====
-    function initTimes(){ var s=document.getElementById('start'), e=document.getElementById('end'); if(s) s.value=nowHMS(); if(e) e.value=nowHMS(); }
-    function setNow(){ var e=document.getElementById('end'); if(e) e.value=nowHMS(); }
+    function initTimes(){ var s=document.getElementById('start'), e=document.getElementById('end'); if(s) s.value=nowHM(); if(e) e.value=nowHM(); }
+    function setNow(){ var e=document.getElementById('end'); if(e) e.value=nowHM(); }
     function swapTimes(){ var s=document.getElementById('start'), e=document.getElementById('end'); if(s&&e){ var a=s.value, b=e.value; if(a&&b){ s.value=b; e.value=a; }}}
     function clearForm(){
       initTimes();
@@ -287,6 +375,7 @@
       var amount=document.getElementById('amount'); if(amount) amount.textContent='$0.00';
       var stamp=document.getElementById('stamp'); if(stamp) stamp.textContent='計算時間：—';
       var cross=document.getElementById('crossday'); if(cross) cross.style.display='none';
+      var promoText=document.getElementById('promoText'); if(promoText) promoText.textContent='';
     }
 
     // ===== History & CSV =====
@@ -297,23 +386,23 @@
       var his=loadLS('parking_history', []);
       hisBody.innerHTML='';
       var filtered=his.filter(function(r){ return Object.values(r).some(function(v){return matchesFilter(v,kw);}); });
-      if(filtered.length===0){ hisBody.innerHTML='<tr><td colspan="10" class="muted">沒有符合的紀錄</td></tr>'; return; }
+      if(filtered.length===0){ hisBody.innerHTML='<tr><td colspan="12" class="muted">沒有符合的紀錄</td></tr>'; return; }
       filtered.forEach(function(r){
         var tr=document.createElement('tr');
-        tr.innerHTML='<td>'+r.ts+'</td><td>'+r.start+'</td><td>'+r.end+'</td><td>'+r.unit+'</td>'+
+        tr.innerHTML='<td>'+r.ts+'</td><td>'+r.start+'</td><td>'+r.end+'</td><td>'+r.veh+'</td><td>'+r.unit+'</td>'+
                      '<td class="right">'+money(r.rate)+'</td><td class="right">'+(r.freeMin||0)+'</td>'+
                      '<td class="right">'+money(r.capFee||0)+'</td><td class="right">'+r.dur+'</td>'+
-                     '<td class="right">'+money(r.amt)+'</td><td>'+(r.remark||'')+'</td>';
+                     '<td class="right">'+money(r.amt)+'</td><td>'+(r.remark||'')+'</td><td>'+(r.promoLabel||'')+'</td>';
         hisBody.appendChild(tr);
       });
     }
     function exportCSV(){
       var his=loadLS('parking_history', []);
       if(his.length===0){ alert('沒有歷史可匯出'); return; }
-      var header=['時間戳','入','出','單位','單價($)','免費(分)','封頂($)','時長','金額($)','備註'];
+      var header=['時間戳','入','出','車種','單位','單價($)','免費(分)','封頂($)','時長','金額($)','備註','優惠'];
       var lines=[header.join(',')];
       his.forEach(function(r){
-        var row=[r.ts,r.start,r.end,r.unit,money(r.rate),r.freeMin||0,money(r.capFee||0),r.dur,money(r.amt),(r.remark||'')]
+        var row=[r.ts,r.start,r.end,r.veh,r.unit,money(r.rate),r.freeMin||0,money(r.capFee||0),r.dur,money(r.amt),(r.remark||''),(r.promoLabel||'')]
           .map(function(x){return '"'+String(x).replace(/"/g,'""')+'"';}).join(',');
         lines.push(row);
       });
@@ -330,39 +419,55 @@
     // ===== Calculation =====
     function calculate(){
       var s=(document.getElementById('start').value||''); var e=(document.getElementById('end').value||'');
-      var r=parseFloat(DEFAULTS.rate||'12'); var freeM=parseInt(DEFAULTS.freeMin||'0',10)||0; var cap=parseFloat(DEFAULTS.capFee||'0')||0;
-      if(!s||!e||isNaN(r)){ alert('請輸入完整時間，並先到「設定」儲存預設。'); return; }
+      var unitIsHour = (DEFAULTS.unit==='hour');
+      var rate = (UI.veh==='truck') ? parseFloat(DEFAULTS.rateTruck||'15') : parseFloat(DEFAULTS.ratePrivate||'12');
+      var freeM=parseInt(DEFAULTS.freeMin||'0',10)||0;
+      var cap=parseFloat(DEFAULTS.capFee||'0')||0;
+      var promoH = parseFloat(DEFAULTS.promoHours||'0')||0;
+      if(!s||!e||isNaN(rate)){ alert('請輸入完整時間，並先到「設定」儲存預設。'); return; }
 
-      var secs=toSec(e)-toSec(s); var crossed=false;
+      var secs=toSecHM(e)-toSecHM(s); var crossed=false;
       if(secs<0){ crossed=true; secs += 24*3600; }
-      var cross=document.getElementById('crossday'); if(cross) cross.style.display = crossed ? 'block':'none';
+      document.getElementById('crossday').style.display = crossed ? 'block':'none';
 
       var freeSecs=Math.max(0, freeM*60);
-      var billSecs=Math.max(0, secs - freeSecs);
+      var promoSecs = (UI.promo && promoH>0) ? promoH*3600 : 0;
 
-      var isHour = DEFAULTS.unit==='hour';
-      var unitSecs = isHour ? 3600 : 1800;
-      var unitName = isHour ? '小時' : '半小時';
+      var billSecs = Math.max(0, secs - freeSecs - promoSecs);
+      var unitSecs = unitIsHour ? 3600 : 1800;
+      var unitName = unitIsHour ? '小時' : '半小時';
       var units = Math.ceil(billSecs / unitSecs);
-      var total = units * r;
+      var total = units * rate;
       var hitCap = (cap>0 && total>cap);
       if(hitCap) total = cap;
 
-      var duration=document.getElementById('duration'); if(duration) duration.textContent = fromSec(secs);
-      var freeNote=document.getElementById('freeNote'); if(freeNote) freeNote.textContent = freeSecs>0 ? '（已扣除免費 '+freeM+' 分鐘）' : '';
-      var formula=document.getElementById('formula'); if(formula) formula.textContent = (units+unitName+' × $'+money(r)+' = $'+money(units*r)) + (hitCap?(' → 套用封頂 $'+money(cap)+' → $'+money(total)):'');
-      var amount=document.getElementById('amount'); if(amount) amount.textContent = '$'+money(total);
-      var stamp=document.getElementById('stamp'); if(stamp) stamp.textContent = '計算時間：'+nowStamp();
+      document.getElementById('duration').textContent = fromSec(secs);
+      document.getElementById('freeNote').textContent = freeSecs>0 ? '（已扣除免費 '+freeM+' 分鐘）' : '';
+      var base = '應計時長 '+Math.ceil(billSecs/60)+' 分鐘 → 以 '+unitName+' 計：'+units+' 單位 × $'+money(rate)+' = $'+money(units*rate);
+      var capNote = hitCap ? (' → 套用封頂 $'+money(cap)+' → $'+money(total)) : '';
+      document.getElementById('formula').textContent = base + capNote;
+      document.getElementById('amount').textContent = '$'+money(total);
+      document.getElementById('stamp').textContent = '計算時間：'+nowStamp();
+
+      var promoText='';
+      if(UI.promo && promoSecs>0){
+        promoText='已套用商場優惠：免 '+promoH+' 小時。';
+      }else if(promoH>0){
+        promoText='可設定商場優惠（免 '+promoH+' 小時），主頁切換「已達標」即可套用。';
+      }
+      document.getElementById('promoText').textContent = promoText;
 
       var remark=(document.getElementById('remark')?document.getElementById('remark').value:'');
-      var row={ts:nowStamp(), start:s, end:e, unit:(isHour?'小時':'半小時'), rate:r, freeMin:freeM, capFee:cap, dur:fromSec(secs), amt:total, remark:remark};
+      var row={
+        ts:nowStamp(), start:s, end:e, veh:(UI.veh==='truck'?'貨車':'私家車'),
+        unit:(unitIsHour?'小時':'半小時'), rate:rate, freeMin:freeM, capFee:cap, dur:fromSec(secs), amt:total,
+        remark:remark, promoLabel: (UI.promo?('已套用免 '+promoH+' 小時'):'未套用')
+      };
       var his=loadLS('parking_history', []); his.unshift(row); saveLS('parking_history', his);
     }
 
     // ===== Bootstrap on window load =====
-    function boot(){
-      tickClock(); initTimes(); reflectDefaultsUI();
-    }
+    function boot(){ tickClock(); initTimes(); reflectDefaultsUI(); }
     window.addEventListener('load', boot);
   </script>
 </body>
